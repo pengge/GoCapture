@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GoCheck
+namespace GoCapture
 {
     public class Map
     {
-        public List<MapPoint> FilledPoints { get; private set; }
+        public List<MapPoint> FilledPoints { get; }
         public int XSize { get; set; }
         public int YSize { get; set; }
 
@@ -16,12 +16,12 @@ namespace GoCheck
             YSize = ySize;
 
             FilledPoints = new List<MapPoint>();
-            for (int i = 1; i <= XSize; i++)
+            for (var i = 1; i <= XSize; i++)
             {
                 FilledPoints.Add(new MapPoint(i, 0, CellStatus.Border));
                 FilledPoints.Add(new MapPoint(i, YSize + 1, CellStatus.Border));
             }
-            for (int i = 1; i <= YSize; i++)
+            for (var i = 1; i <= YSize; i++)
             {
                 FilledPoints.Add(new MapPoint(0, i, CellStatus.Border));
                 FilledPoints.Add(new MapPoint(XSize + 1, i, CellStatus.Border));
@@ -30,12 +30,12 @@ namespace GoCheck
 
         public void SetBorderPointStatus (CellStatus pointStatus)
         {
-            for (int i = 1; i <= XSize; i++)
+            for (var i = 1; i <= XSize; i++)
             {
                 SetPoint(new MapPoint(i, 0, pointStatus));
                 SetPoint(new MapPoint(i, YSize + 1, pointStatus));
             }
-            for (int i = 1; i <= YSize; i++)
+            for (var i = 1; i <= YSize; i++)
             {
                 SetPoint(new MapPoint(0, i, pointStatus));
                 SetPoint(new MapPoint(XSize + 1, i, pointStatus));
@@ -49,19 +49,14 @@ namespace GoCheck
 
         public MapPoint GetPoint(int x, int y, Direction direction)
         {
-            switch(direction)
+            return direction switch
             {
-                case Direction.North:
-                    return GetPoint(x, y + 1);
-                case Direction.South:
-                    return GetPoint(x, y - 1);
-                case Direction.East:
-                    return GetPoint(x + 1, y);
-                case Direction.West:
-                    return GetPoint(x - 1, y);
-                default:
-                    return GetPoint(x, y);
-            }
+                Direction.North => GetPoint(x, y + 1),
+                Direction.South => GetPoint(x, y - 1),
+                Direction.East => GetPoint(x + 1, y),
+                Direction.West => GetPoint(x - 1, y),
+                _ => GetPoint(x, y),
+            };
         }
 
         public void DeletePoint(int x, int y)
@@ -87,11 +82,8 @@ namespace GoCheck
 
         public void Print()
         {
-            foreach (var point in FilledPoints)
+            foreach (var point in FilledPoints.Where(point => point.CellStatus != CellStatus.Border))
             {
-                if (point.CellStatus == CellStatus.Border)
-                    continue;
-
                 Console.WriteLine($"X:{point.X} Y:{point.Y} Status:{point.CellStatus}");
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace GoCheck
+﻿namespace GoCapture
 {
     public enum CellStatus
     {

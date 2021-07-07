@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GoCheck
+namespace GoCapture
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             // // SAMPLE 1: Result should be true
             //var map = new Map(10,10);
@@ -125,14 +125,14 @@ namespace GoCheck
             
             map.Print();            
 
-            var result = IsPointLost(map, checkedCoordinate);
+            var result = Run(map, checkedCoordinate);
 
             Console.WriteLine($"Checking for coordinates X: {checkedCoordinate.X} Y: {checkedCoordinate.Y} Result is={result}");
 
             Console.ReadLine();
         }
 
-        static bool IsPointLost(Map originalMap, Coordinate coordinate)
+        private static bool Run(Map originalMap, Coordinate coordinate)
         {
             // Create a copy
             var map = new Map(originalMap.XSize, originalMap.YSize);
@@ -151,10 +151,10 @@ namespace GoCheck
 
             var enemyPointStatus = checkedPoint.CellStatus == CellStatus.White ? CellStatus.Black : CellStatus.White;
             map.SetBorderPointStatus(enemyPointStatus);
-            return isPointLost(map, checkedPoint, enemyPointStatus);
+            return IsPointLost(map, checkedPoint, enemyPointStatus);
         }
 
-        static bool isPointLost(Map map, MapPoint point, CellStatus enemyPointStatus)
+        private static bool IsPointLost(Map map, MapPoint point, CellStatus enemyPointStatus)
         {
             var neighbours = new List<MapPoint>
             {
@@ -170,13 +170,12 @@ namespace GoCheck
                 {
                     return false;
                 }
-                else if (neighbour.CellStatus != enemyPointStatus)
+
+                if (neighbour.CellStatus == enemyPointStatus) continue;
+                point.CellStatus = enemyPointStatus;
+                if (!IsPointLost(map, neighbour, enemyPointStatus))
                 {
-                    point.CellStatus = enemyPointStatus;
-                    if (!isPointLost(map, neighbour, enemyPointStatus))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 

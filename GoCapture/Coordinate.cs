@@ -1,5 +1,5 @@
 ﻿
-namespace GoCheck
+namespace GoCapture
 {
     public class Coordinate
     {
@@ -16,19 +16,14 @@ namespace GoCheck
         {
             var x = coordinate.X;
             var y = coordinate.Y;
-            switch (direction)
+            return direction switch
             {
-                case Direction.North:
-                    return new Coordinate(x, y + 1);
-                case Direction.South:
-                    return new Coordinate(x, y - 1);
-                case Direction.East:
-                    return new Coordinate(x + 1, y);
-                case Direction.West:
-                    return new Coordinate(x - 1, y);
-                default:
-                    return new Coordinate(x, y);
-            }
+                Direction.North => new Coordinate(x, y + 1),
+                Direction.South => new Coordinate(x, y - 1),
+                Direction.East => new Coordinate(x + 1, y),
+                Direction.West => new Coordinate(x - 1, y),
+                _ => new Coordinate(x, y),
+            };
         }
     }
 }
